@@ -9,7 +9,7 @@ from dff.script import Context
 from dff.pipeline import Pipeline
 from dff.script.core.message import Button
 from dff.messengers.telegram import TelegramMessage, TelegramUI, ParseMode
-from qa.rag import format_document
+from qa.rag import format_document, generate
 
 
 def suggest_similar_questions(ctx: Context, _: Pipeline):
@@ -41,16 +41,16 @@ def answer_question(ctx: Context, _: Pipeline):
     """Answer a question asked by a user by pressing a button."""
     if ctx.validation:  # this function requires non-empty fields and cannot be used during script validation
         return TelegramMessage()
-    print("\n\nCONTEXT\n\n",ctx.last_request)
     last_request = ctx.last_request
     if last_request is None:
         raise RuntimeError("No last requests.")
-    last_request = cast(TelegramMessage, last_request)
+    last_request = cast(TelegramMessage, ctx.last_request)
     # if last_request.callback_query is None:
     #     raise RuntimeError("No callback query")
-    print("\n\nANNOTATIONS\n\n", last_request.annotations.get("retrived_docs"))
-    retrieved_docs = last_request.annotations.get("retrived_docs")
+    retrieved_docs = ctx.last_request.annotations.get("retrieved_docs")
     
     context = "\n".join([format_document(doc, i + 1) for i, doc in enumerate(retrieved_docs)])
     print("\n\RESULT\n\n", context)
-    return TelegramMessage(text=context, parse_mode=ParseMode.HTML)
+    gen_answer = generate(question=last_request.text, context=context)
+    
+    return TelegramMessage(text=gen_answer, parse_mode=ParseMode.HTML)

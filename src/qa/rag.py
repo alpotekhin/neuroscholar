@@ -10,30 +10,33 @@ import numpy as np
 from sentence_transformers import SentenceTransformer
 
 import qdrant_client
-from langchain.vectorstores import Qdrant
+from langchain_community.vectorstores import Qdrant
+from langchain.prompts import PromptTemplate
+from langchain.chains import LLMChain
+from langchain_cohere import ChatCohere
 
 from database.build_qdrant import get_qdrant
 
-model = SentenceTransformer("clips/mfaq")
-
-with open(Path(__file__).parent / "faq_dataset_sample.json", "r", encoding="utf-8") as file:
-    faq = json.load(file)
+import getpass
+import os
 
 
-def find_similar_questions(question: str):
-    """Return a list of similar questions from the database."""
-    questions = list(map(lambda x: "<Q>" + x, faq.keys()))
-    q_emb, *faq_emb = model.encode(["<Q>" + question] + questions)
 
-    emb_with_scores = tuple(zip(questions, map(lambda x: np.linalg.norm(x - q_emb), faq_emb)))
+template = """Analyze the context of the question and identify key themes, concepts, and information requests.
+Utilize natural language processing algorithms to comprehend the meaning of the question and associated data.
+Formulate a response to the question based on the analysis of the context and the extracted data.
+Verify the formulated response for relevance to the query and its comprehensibility for the user.
+Provide the response to the user, taking into account the wording of the question and preferences in conveying information.
+Make sure to indicate the title of the article that you relied on in the answer and attach a link to it
+==================
+Context: {context}
+==================
+Question:
+{question}
+==================
+Answer: """
 
-    filtered_embeddings = tuple(sorted(filter(lambda x: x[1] < 10, emb_with_scores), key=lambda x: x[1]))
-
-    result = []
-    for question, score in filtered_embeddings:
-        question = question.removeprefix("<Q>")
-        result.append(question)
-    return result
+prompt = PromptTemplate(template=template, input_variables=["context","question"])
 
 def format_document(doc, index):
     text = doc.page_content
@@ -50,7 +53,10 @@ def retrieve(question: str):
     # print("\n\nretrieved_doc", retrieved_doc, "\n\n")
     
     return retrieved_doc
-    
 
-# тут раг пишем в responses вставляем ответ пользователю 
-# Сделать Parent Document на абстрактах и подумать над вопросами по статье 
+def generate(context: str, question: str):
+    prompt = PromptTemplate(template=template, input_variables=["context","question"])
+    llm_chain = LLMChain(prompt=prompt, llm=ChatCohere(cohere_api_key=os.environ["COHERE_API_KEY"]))
+    
+    return llm_chain.run(question=question, context=context)
+
