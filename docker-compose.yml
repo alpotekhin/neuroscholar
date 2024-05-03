@@ -1,0 +1,8 @@
+version: "2"
+services:
+    bot:
+        build:
+            context: src/
+        volumes:
+            - ./src/:/app:ro
+        env_file: .env
