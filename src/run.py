@@ -5,7 +5,7 @@ from dff.pipeline import Pipeline
 
 from dialog_graph import script
 from pipeline_services import pre_services
-
+from database.build_qdrant import setup_qdrant
 
 def get_pipeline(use_cli_interface: bool = False) -> Pipeline:
     telegram_token = os.getenv("TG_BOT_TOKEN")
@@ -19,7 +19,7 @@ def get_pipeline(use_cli_interface: bool = False) -> Pipeline:
             "Telegram token (`TG_BOT_TOKEN`) is not set. `TG_BOT_TOKEN` can be set via `.env` file."
             " For more info see README.md."
         )
-
+    
     pipeline = Pipeline.from_script(
         script=script.script,
         start_label=("service_flow", "start_node"),
@@ -33,5 +33,6 @@ def get_pipeline(use_cli_interface: bool = False) -> Pipeline:
 
 
 if __name__ == "__main__":
+    setup_qdrant()
     pipeline = get_pipeline()
     pipeline.run()

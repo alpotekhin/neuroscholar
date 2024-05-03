@@ -23,8 +23,8 @@ script = {
     "qa_flow": {
         LOCAL: {
             TRANSITIONS: {
-                ("qa_flow", "suggest_questions"): received_text,
-                ("qa_flow", "answer_question"): received_button_click,
+                ("qa_flow", "answer_question"): received_text,
+                # ("qa_flow", "answer_question"): received_button_click,
             },
         },
         "welcome_node": {

@@ -1,8 +1,20 @@
-version: "2"
+version: "3.8"
 services:
     bot:
         build:
             context: src/
         volumes:
-            - ./src/:/app:ro
+            - ./src/:/app
         env_file: .env
+
+    qdrant:
+        image: qdrant/qdrant
+        ports:
+            - "6333:6333"
+        volumes:
+            - qdrant_data:/qdrant_data # Correct placement for volume mounting
+        environment:
+            - QDRANT__STORAGE__PERSISTENT_STORAGE_PATH=/qdrant_data
+
+volumes:
+    qdrant_data: # Correctly declare the persistent volume here
