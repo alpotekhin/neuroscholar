@@ -17,6 +17,20 @@ def received_text(ctx: Context, _: Pipeline):
     return last_request.text is not None
 
 
+def received_question(ctx: Context, _: Pipeline):
+    """Return true if the last update from user contains question."""
+    last_request = ctx.last_request
+
+    return last_request.annotations.get("intent") in ['question', 'rhetorical question']
+
+
+def received_statement(ctx: Context, _: Pipeline):
+    """Return true if the last update from user contains statement."""
+    last_request = ctx.last_request
+
+    return last_request.annotations.get("intent") not in ['question', 'rhetorical question']
+
+
 def received_button_click(ctx: Context, _: Pipeline):
     """Return true if the last update from user is a button press."""
     if ctx.validation:  # Regular `Message` doesn't have `callback_query` field, so this fails during validation

@@ -17,5 +17,5 @@ venv*
 htmlcov
 .env
 /qdrant_storage
-poetry.lock
-pyproject.toml
+dbs/
+dialog_flow_framework/
