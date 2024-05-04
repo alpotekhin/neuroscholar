@@ -6,8 +6,7 @@ def get_intent_classifier(hf_path="bespin-global/klue-roberta-small-3i4k-intent-
     
     text_classifier = TextClassificationPipeline(
         tokenizer=loaded_tokenizer, 
-        model=loaded_model, 
-        return_all_scores=True
+        model=loaded_model,
     )
     
     return text_classifier
@@ -24,18 +23,16 @@ class HuggingFaceModelSingleton:
                 
                 cls._instance = TextClassificationPipeline(
                     tokenizer=loaded_tokenizer, 
-                    model=loaded_model, 
-                    return_all_scores=True
+                    model=loaded_model,
                 )
                 
         return cls._instance
 
 def classify_message(message):
     classifier = HuggingFaceModelSingleton.get_instance()
-    preds_list = classifier(message)[0]
-    label_score_dict = {item['label']: item['score'] for item in preds_list}
+    pred = classifier(message)[0]
     
-    return label_score_dict
+    return pred['label']
     
 
 
