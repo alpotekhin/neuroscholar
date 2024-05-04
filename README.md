@@ -1,6 +1,8 @@
 # Neuroscholar Bot
 
 This repository contains the Neuroscholar bot designed to assist with answering questions about NLP papers.
+### Bot id
+@neuroscholar_bot
 
 ## How to Run
 
