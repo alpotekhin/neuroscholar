@@ -1,12 +1,11 @@
 import pytest
 from dff.utils.testing.common import check_happy_path
-from dff.messengers.telegram import TelegramMessage, TelegramUI
+from dff.messengers.telegram import TelegramMessage
 from dff.script import RESPONSE
-from dff.script.core.message import Button
 
 from dialog_graph import script
 from run import get_pipeline
-from qa.rag import faq
+
 
 
 @pytest.mark.asyncio
@@ -14,45 +13,26 @@ from qa.rag import faq
     "happy_path",
     [
         (
-            (TelegramMessage(text="/start"), script.script["qa_flow"]["welcome_node"][RESPONSE]),
             (
-                TelegramMessage(text="Why use arch?"),
-                TelegramMessage(
-                    text="I found similar questions in my database:",
-                    ui=TelegramUI(
-                        buttons=[
-                            Button(text=q, payload=q)
-                            for q in ["Why would I want to use Arch?", "Why would I not want to use Arch?"]
-                        ]
-                    ),
-                ),
+                TelegramMessage(text="/start"),
+                script.script["qa_flow"]["welcome_node"][RESPONSE]
             ),
             (
-                TelegramMessage(callback_query="Why would I want to use Arch?"),
-                TelegramMessage(text=faq["Why would I want to use Arch?"]),
+                TelegramMessage(callback_query="What is RAGAS?"),
+                script.script["qa_flow"]["answer_question"][RESPONSE]
             ),
             (
-                TelegramMessage(callback_query="Why would I not want to use Arch?"),
-                TelegramMessage(text=faq["Why would I not want to use Arch?"]),
+                TelegramMessage(callback_query="What is Chain of Density prompt?"),
+                script.script["qa_flow"]["answer_question"][RESPONSE]
             ),
             (
-                TelegramMessage(text="What is arch linux?"),
-                TelegramMessage(
-                    text="I found similar questions in my database:",
-                    ui=TelegramUI(buttons=[Button(text=q, payload=q) for q in ["What is Arch Linux?"]]),
-                ),
-            ),
-            (TelegramMessage(callback_query="What is Arch Linux?"), TelegramMessage(text=faq["What is Arch Linux?"])),
+                TelegramMessage(callback_query="Let's talk about music"),
+                TelegramMessage(text="I don't know how to chat with people \U0001F62B \
+                Please ask me questions about NLP-related articles (currently, only DeepPavlov seminar papers are supported).")
+            ), 
             (
-                TelegramMessage(text="where am I?"),
-                TelegramMessage(
-                    text="I don't have an answer to that question. Here's a list of questions I know an answer to:",
-                    ui=TelegramUI(buttons=[Button(text=q, payload=q) for q in faq]),
-                ),
-            ),
-            (
-                TelegramMessage(callback_query="What architectures does Arch support?"),
-                TelegramMessage(text=faq["What architectures does Arch support?"]),
+                TelegramMessage(callback_query="What's the temperature in London right now?"),
+                TelegramMessage(text="Please ask another question."),
             ),
         )
     ],
