@@ -1,7 +1,7 @@
 import asyncio
 import os
 
-from dff.messengers.telegram import PollingTelegramInterfacee
+from dff.messengers.telegram import PollingTelegramInterface
 from dialog_graph import script
 from pipeline_services import pre_services
 from database.build_qdrant import setup_qdrant
