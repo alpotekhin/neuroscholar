@@ -1,18 +1,11 @@
+import asyncio
 import os
 
-from dff.messengers.telegram import PollingTelegramInterface
-from dff.pipeline import Pipeline
-
-import pathlib
-from dff.context_storages import context_storage_factory
-
+from dff.messengers.telegram import PollingTelegramInterfacee
 from dialog_graph import script
 from pipeline_services import pre_services
 from database.build_qdrant import setup_qdrant
 from qa.nlu import HuggingFaceModelSingleton
-
-
-import asyncio
 
 from dff.script import Context
 from dff.pipeline import (
@@ -23,20 +16,22 @@ from dff.pipeline import (
     ServiceGroup,
     GlobalExtraHandlerType,
 )
-from dff.utils.testing.toy_script import TOY_SCRIPT, HAPPY_PATH
 from dff.stats import (
     OtelInstrumentor,
     set_logger_destination,
     set_tracer_destination,
+    OTLPLogExporter, 
+    OTLPSpanExporter,
+    default_extractors
 )
-from dff.stats import OTLPLogExporter, OTLPSpanExporter
-from dff.stats import default_extractors
 
 
 set_logger_destination(OTLPLogExporter("otel-col:4317", insecure=True))
 set_tracer_destination(OTLPSpanExporter("otel-col:4317", insecure=True))
 dff_instrumentor = OtelInstrumentor()
 dff_instrumentor.instrument()
+
+
 # example extractor function
 @dff_instrumentor
 async def get_service_state(ctx: Context, _, info: ExtraHandlerRuntimeInfo):
@@ -47,11 +42,13 @@ async def get_service_state(ctx: Context, _, info: ExtraHandlerRuntimeInfo):
     # return a record to save into connected database
     return data
 
+
 # example service
 async def heavy_service(ctx: Context):
     _ = ctx  # get something from ctx if needed
     await asyncio.sleep(0.02)
-    
+
+
 def get_pipeline(use_cli_interface: bool = False) -> Pipeline:
     telegram_token = os.getenv("TG_BOT_TOKEN")
 
@@ -64,16 +61,13 @@ def get_pipeline(use_cli_interface: bool = False) -> Pipeline:
             "Telegram token (`TG_BOT_TOKEN`) is not set. `TG_BOT_TOKEN` can be set via `.env` file."
             " For more info see README.md."
         )
-    # pathlib.Path("dbs").mkdir(exist_ok=True)
-    # db = context_storage_factory("json://dbs/file.json")
-    
+
     pipeline = Pipeline.from_dict(
-            {
+        {
             "script": script.script,
             "start_label": ("service_flow", "start_node"),
             "fallback_label": ("service_flow", "fallback_node"),
             "messenger_interface": messenger_interface,
-            
             "components": [
                 ServiceGroup(
                     before_handler=[default_extractors.get_timing_before],
@@ -108,15 +102,6 @@ def get_pipeline(use_cli_interface: bool = False) -> Pipeline:
         GlobalExtraHandlerType.AFTER_ALL, default_extractors.get_timing_after
     )
     pipeline.add_global_handler(GlobalExtraHandlerType.AFTER_ALL, get_service_state)
-    
-    # pipeline = Pipeline.from_script(
-    #     script=script.script,
-    #     start_label=("service_flow", "start_node"),
-    #     fallback_label=("service_flow", "fallback_node"),
-    #     messenger_interface=messenger_interface,
-    #     pre_services=pre_services.services,
-    #     context_storage=db
-    # )
 
     return pipeline
 

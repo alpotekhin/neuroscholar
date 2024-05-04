@@ -3,22 +3,14 @@ Model
 -----
 This module defines AI-dependent functions.
 """
-import json
-from pathlib import Path
+import os
 
-import numpy as np
-from sentence_transformers import SentenceTransformer
-
-import qdrant_client
-from langchain_community.vectorstores import Qdrant
 from langchain.prompts import PromptTemplate
 from langchain.chains import LLMChain
 from langchain_cohere import ChatCohere
-
 from database.build_qdrant import get_qdrant
 
-import getpass
-import os
+
 
 
 
@@ -33,34 +25,39 @@ Question:
 #################
 Answer: """
 
-prompt = PromptTemplate(template=template, input_variables=["context","question"])
+prompt = PromptTemplate(template=template, input_variables=[
+                        "context", "question"])
+
 
 def format_document(doc, index):
     text = doc["page_content"]
     title = doc["metadata"]["title"]
     link = doc["metadata"]["link"]
     authors = doc["metadata"]["authors"]
-    
+
     return f"Document {index}:\nText: {text}\nTitle: {title}\nLink: {link}\nAuthors: {authors}\n"
 
+
 def document_to_dict(document):
-    return {
-        "page_content": document.page_content,
-        "metadata": document.metadata
-    }
+    return {"page_content": document.page_content, "metadata": document.metadata}
+
 
 def retrieve(question: str):
     qdrant = get_qdrant()
-    # print("\n\nqdrant activated", qdrant, "\n\n")
-    retriever = qdrant.as_retriever(search_kwargs={"k": 5}, score_threshold=0.8,verbose=True)
+    retriever = qdrant.as_retriever(
+        search_kwargs={"k": 5}, score_threshold=0.8, verbose=True
+    )
     retrieved_docs = retriever.get_relevant_documents(question)
-    # print("\n\nretrieved_doc", retrieved_doc, "\n\n")
-    
+
     return [document_to_dict(doc) for doc in retrieved_docs]
 
-def generate(context: str, question: str):
-    prompt = PromptTemplate(template=template, input_variables=["context","question"])
-    llm_chain = LLMChain(prompt=prompt, llm=ChatCohere(cohere_api_key=os.environ["COHERE_API_KEY"])) # TO DO singltone
-    
-    return llm_chain.run(question=question, context=context)
 
+def generate(context: str, question: str):
+    prompt = PromptTemplate(template=template, input_variables=[
+                            "context", "question"])
+    llm_chain = LLMChain(
+        prompt=prompt, llm=ChatCohere(
+            cohere_api_key=os.environ["COHERE_API_KEY"])
+    )  # TO DO singltone
+
+    return llm_chain.run(question=question, context=context)
