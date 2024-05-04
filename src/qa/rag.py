@@ -49,7 +49,7 @@ def format_document(doc, index):
 def retrieve(question: str):
     qdrant = get_qdrant()
     # print("\n\nqdrant activated", qdrant, "\n\n")
-    retriever = qdrant.as_retriever(search_kwargs={"k": 5}, verbose=True)
+    retriever = qdrant.as_retriever(search_kwargs={"k": 5}, score_threshold=0.8,verbose=True)
     retrieved_doc = retriever.get_relevant_documents(question)
     # print("\n\nretrieved_doc", retrieved_doc, "\n\n")
     

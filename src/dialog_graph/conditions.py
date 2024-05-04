@@ -16,6 +16,13 @@ def received_text(ctx: Context, _: Pipeline):
 
     return last_request.text is not None
 
+def received_question(ctx: Context, _: Pipeline):
+    """Return true if the last update from user contains text."""
+    last_request = ctx.last_request
+    
+
+    return last_request.text is not None
+
 
 def received_button_click(ctx: Context, _: Pipeline):
     """Return true if the last update from user is a button press."""
