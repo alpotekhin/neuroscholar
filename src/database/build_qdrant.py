@@ -12,10 +12,11 @@ def load_data(filepath):
     splitter = RecursiveCharacterTextSplitter(chunk_size=1024)
     documents = [
         Document(
-            page_content=row["abstract"],
+            page_content=row["Abstract"],
             metadata={
-                "link": row["link"],
-                "title": row["title"]
+                "link": row["Link"],
+                "title": row["Title"],
+                "authors": row["Authors"],
             }
         )
         for _, row in data.iterrows()

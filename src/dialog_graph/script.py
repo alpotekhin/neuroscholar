@@ -27,7 +27,7 @@ script = {
             },
         },
         "welcome_node": {
-            RESPONSE: TelegramMessage(text="Welcome! Ask me questions about Arch Linux."),
+            RESPONSE: TelegramMessage(text="Welcome! Ask me questions about NLP-related articles (currently, only DeepPavlov seminar papers are supported)."),
         },
         "answer_question": {
             RESPONSE: answer_question,

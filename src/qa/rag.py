@@ -42,8 +42,9 @@ def format_document(doc, index):
     text = doc.page_content
     title = doc.metadata["title"]
     link = doc.metadata["link"]
+    authors = doc.metadata["authors"]
     
-    return f"Document {index}:\nText: {text}\nTitle: {title}\nLink: {link}\n"
+    return f"Document {index}:\nText: {text}\nTitle: {title}\nLink: {link}\nAuthors: {authors}\n"
 
 def retrieve(question: str):
     qdrant = get_qdrant()
