@@ -1,0 +1,7 @@
+db:
+  driver: clickhousedb+connect
+  name: test1
+  user: username
+  host: clickhouse
+  port: 8123
+  table: otel_logs

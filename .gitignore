@@ -19,3 +19,4 @@ htmlcov
 /qdrant_storage
 poetry.lock
 pyproject.toml
+dbs/

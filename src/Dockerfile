@@ -8,7 +8,7 @@ COPY requirements.txt requirements.txt
 RUN pip3 install -r requirements.txt
 
 # cache mfaq model
-RUN ["python3", "-c", "from sentence_transformers import SentenceTransformer; _ = SentenceTransformer('intfloat/multilingual-e5-large')"]
+# RUN ["python3", "-c", "from sentence_transformers import SentenceTransformer; _ = SentenceTransformer('intfloat/multilingual-e5-large')"]
 
 
 COPY . .
