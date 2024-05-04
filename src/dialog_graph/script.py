@@ -30,7 +30,7 @@ script = {
             },
         },
         "chitchat_node": {
-            RESPONSE: TelegramMessage(text="I don't know how to chat with people )=\n\
+            RESPONSE: TelegramMessage(text="I don't know how to chat with people \U0001F62B \
                 Please ask me questions about NLP-related articles (currently, only DeepPavlov seminar papers are supported)."),
         },
         "welcome_node": {

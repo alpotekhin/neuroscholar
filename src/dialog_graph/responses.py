@@ -22,9 +22,7 @@ def answer_question(ctx: Context, _: Pipeline):
     # if last_request.callback_query is None:
     #     raise RuntimeError("No callback query")
     retrieved_docs = ctx.last_request.annotations.get("retrieved_docs")
-    
     context = "\n".join([format_document(doc, i + 1) for i, doc in enumerate(retrieved_docs)])
-    print("\n\RESULT\n\n", context)
     gen_answer = generate(question=last_request.text, context=context)
     
     return TelegramMessage(text=gen_answer, parse_mode=ParseMode.HTML)
