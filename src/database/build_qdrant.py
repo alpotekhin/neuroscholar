@@ -41,7 +41,7 @@ def init_qdrant(documents, embeddings, url, collection_name):
     )
     return qdrant
 
-def get_qdrant(model_name="intfloat/multilingual-e5-large", host="http://localhost:6333", collection_name="papers"):
+def get_qdrant(model_name="intfloat/multilingual-e5-large", host="http://qdrant:6333", collection_name="papers"):
     embeddings = initialize_embeddings(model_name)
     
     client = qdrant_client.QdrantClient(
@@ -54,7 +54,7 @@ def get_qdrant(model_name="intfloat/multilingual-e5-large", host="http://localho
     return qdrant
 
 
-def setup_qdrant(data_path="src/database/papers.csv", model_name="intfloat/multilingual-e5-large", qdrant_url="http://localhost:6333", collection_name="papers"):
+def setup_qdrant(data_path="./database/papers.csv", model_name="intfloat/multilingual-e5-large", qdrant_url="http://qdrant:6333", collection_name="papers"):
     # Load and preprocess data
     documents = load_data(data_path)
 

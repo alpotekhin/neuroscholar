@@ -33,8 +33,8 @@ from dff.stats import OTLPLogExporter, OTLPSpanExporter
 from dff.stats import default_extractors
 
 
-set_logger_destination(OTLPLogExporter("grpc://localhost:4317", insecure=True))
-set_tracer_destination(OTLPSpanExporter("grpc://localhost:4317", insecure=True))
+set_logger_destination(OTLPLogExporter("otel-col:4317", insecure=True))
+set_tracer_destination(OTLPSpanExporter("otel-col:4317", insecure=True))
 dff_instrumentor = OtelInstrumentor()
 dff_instrumentor.instrument()
 # example extractor function
@@ -122,8 +122,6 @@ def get_pipeline(use_cli_interface: bool = False) -> Pipeline:
 
 
 if __name__ == "__main__":
-    
-    
     setup_qdrant()
     HuggingFaceModelSingleton.get_instance()
     pipeline = get_pipeline()

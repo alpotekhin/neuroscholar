@@ -20,3 +20,4 @@ htmlcov
 poetry.lock
 pyproject.toml
 dbs/
+dialog_flow_framework/
