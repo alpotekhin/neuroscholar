@@ -4,9 +4,12 @@ services:
         build:
             context: ./src/docker
             dockerfile: Dockerfile.bot
+        depends_on:
+            - qdrant
         volumes:
             - ./src/:/app:ro
         env_file: .env
+
     qdrant:
         image: qdrant/qdrant
         ports:
