@@ -15,36 +15,18 @@ poetry shell
 poetry install
 ```
 
-### Clone and Setup DeepPavlov Dialog Flow Framework (DFF)
-
-Clone the DFF repository for monitoring and analytics capabilities, then install it with the necessary dependencies:
+### Configure env file
 
 ```bash
-git clone https://github.com/deeppavlov/dialog_flow_framework.git
-cd dialog_flow_framework
-pip install .[stats]
-docker compose --profile stats up -d
+mv .env_example .env
 ```
 
-### Run the Bot
+Set ***TG_BOT_TOKEN*** and ***COHERE_API_KEY***
 
-Navigate back to the root directory of your project and set environment variables for your bot:
+### Run the bot
 
 ```bash
-cd ..
-export TG_BOT_TOKEN=YOUR_TOKEN
-export COHERE_API_KEY=YOUR_TOKEN
 docker compose up
-```
-
-### Networking
-
-Join the containers into a single network to facilitate communication between them:
-
-```bash
-docker network create botnetwork
-docker network connect botnetwork otel-col
-docker network connect botnetwork neuroscholar_bot-bot-1
 ```
 
 ### Analytics and Monitoring
@@ -52,7 +34,7 @@ docker network connect botnetwork neuroscholar_bot-bot-1
 Run the following command to generate and check analytics:
 
 ```bash
-dff.stats tutorials/stats/example_config.yaml -P superset -dP pass -U superset --outfile=config_artifact.zip
+dff.stats example_config.yaml -P superset -dP pass -U superset --outfile=config_artifact.zip
 ```
 
 ### Accessing the Dashboard
@@ -62,8 +44,3 @@ Proceed to the dashboard by navigating to the following URL in your web browser:
 ```
 localhost:8088
 ```
-
----
-
-**Note:** Ensure you replace `YOUR_TOKEN` placeholders with actual API keys and tokens for Telegram and Cohere.
-

@@ -29,7 +29,7 @@ def question_processor(ctx: Context):
             last_request.annotations["retrieved_docs"] = retrieve(last_request.text)
             last_request.annotations["intent"] = classify_message(last_request.text)
 
-    ctx._set_last_request(last_request)
+    ctx.add_request(last_request)
 
 
 services = [question_processor]  # pre-services run before bot sends a response
