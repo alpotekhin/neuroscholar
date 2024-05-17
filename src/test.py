@@ -18,22 +18,15 @@ from run import get_pipeline
                 script.script["qa_flow"]["welcome_node"][RESPONSE]
             ),
             (
-                TelegramMessage(callback_query="What is RAGAS?"),
-                script.script["qa_flow"]["answer_question"][RESPONSE]
-            ),
-            (
-                TelegramMessage(callback_query="What is Chain of Density prompt?"),
-                script.script["qa_flow"]["answer_question"][RESPONSE]
+                TelegramMessage(callback_query="What do you think about the weather?"),
+                TelegramMessage(text="I don't know how to chat with people \U0001F62B \
+                Please ask me questions about NLP-related articles (currently, only DeepPavlov seminar papers are supported).")
             ),
             (
                 TelegramMessage(callback_query="Let's talk about music"),
                 TelegramMessage(text="I don't know how to chat with people \U0001F62B \
                 Please ask me questions about NLP-related articles (currently, only DeepPavlov seminar papers are supported).")
             ), 
-            (
-                TelegramMessage(callback_query="What's the temperature in London right now?"),
-                TelegramMessage(text="Please ask another question."),
-            ),
         )
     ],
 )

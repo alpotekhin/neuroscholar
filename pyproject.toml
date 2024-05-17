@@ -19,6 +19,7 @@ qdrant-client = "^1.9.0"
 langchain-community = "^0.0.36"
 langchain-cohere = "^0.1.4"
 flask = "^3.0.3"
+pytest-asyncio = "^0.23.6"
 
 [tool.poetry.scripts]
 "dff.stats" = { callable = "dff.stats.__main__:main", extras = ["stats"] }
